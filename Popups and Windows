@@ -1,0 +1,262 @@
+1.	Capturing the alert message using getText().
+
+@Test
+public void T01_AlertTest() 
+{
+driver. navigate().to("http://www.w3schools.com/js/tryit.asp?filename=tryjs_alert");
+    driver.switchTo().frame("iframeResult");
+    WebElement alertButton = driver.findElement(By.cssSelector("html>body>button"));
+    alertButton.click();
+    String expectedAlertMessage = "I am an alert box!";
+    String actualAlertMessage = driver.switchTo().alert().getText();
+    Assertions.assertEquals(expectedAlertMessage, actualAlertMessage);
+    driver.switchTo().alert().accept();
+}
+
+2. Prompt Alert with Text Box to enter the text.
+
+let text;
+let favDrink = prompt ("What's your favorite cocktail drink?");
+switch(favDrink) {
+  case "Coca-Cola":
+    text = "Excellent choice! Coca-Cola is good for your soul.";
+    break;
+  case "Pepsi":
+    text = "Pepsi is my favorite too!";
+    break;
+  case "Sprite":
+    text = "Really? Are you sure the Sprite is your favorite?";
+    break;
+  default:
+    text = "I have never heard of that one!";
+}
+
+3.	Confirmation Alert with Ok and Cancel buttons.
+ 
+let text;
+if (confirm ("Press a button!") == true) 
+{
+  text = "You pressed OK!";
+} else {
+  text = "You cancelled!";
+}
+
+4. Clicking OK button of the alert using accept().
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.Alert;
+public class AlertAccept{
+   public static void main (String[] args) 
+   {
+      System.setProperty("webdriver.chrome.driver", "C:\Users\ghs6kor\Desktop\Java\chromedriver.exe");
+      WebDriver driver = new ChromeDriver();
+      String url ="https://www.tutorialspoint.com/selenium/selenium_automation_practice.htm";
+      driver.get(url);
+      driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+      // identify element
+      driver. findElement(By.xpath("//button[@name='submit']")).click();
+      Alert al = driver.switchTo().alert();
+      al.accept();
+      driver.quit();
+   }
+}
+
+5. Clicking Cancel button of the alert using dismiss ().
+
+("#complexConfirm"). confirm ({
+    title: “Delete confirmation",
+    text: “This is very dangerous; you shouldn't do it! Are you sure?",
+    confirm: function(button) {
+        alert ("You just confirmed.");
+    },
+    cancel: function(button) {
+        alert ("You aborted the operation.");
+    },
+    confirmButton: "Yes I am",
+    cancelButton: "No"
+});
+
+6. Handle single window using driver.getWindowHandle().
+
+@TestInstance (TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder (MethodOrderer.MethodName.class)
+public class Windows 
+{
+    private WebDriver driver;
+    
+    public void setupTest() 
+    {
+        WebDriverManager.chromedriver(). setup ();
+        driver = new ChromeDriver();
+    }
+    @Test
+    @SneakyThrows
+    public void T02_ManageWindows () 
+    {
+driver. navigate().to("http://www.w3schools.com/tags/tryit.asp?filename=tryhtml_link_target");
+        driver.manage().window().maximize();
+        Dimension windowSize = driver.manage().window().getSize();
+        System.out.println("***Full Size Values for Current Window***\n");
+        System.out.println("Screen Width: " + windowSize.getWidth() + "\n");
+        System.out.println("Screen Height: " + windowSize.getHeight() + "\n");
+        Thread.sleep(500);
+        driver.manage().window().setSize(new Dimension(windowSize.getWidth() / 4, windowSize.getHeight() / 4));
+        Dimension quarterWindowSize = driver.manage().window().getSize();
+        System.out.println("*** 1/4 Size Values for Current Window***\n");
+        System.out.println("Screen Width: " + quarterWindowSize.getWidth() + "\n");
+        System.out.println("Screen Height: " + quarterWindowSize.getHeight() + "\n");
+        Thread.sleep(500);
+        Point windowPosition = driver.manage().window().getPosition();
+        System.out.println("*** Window Position for Current Window***\n");
+        System.out.println("Window X position: " + windowPosition.getX() + "\n");
+        System.out.println("Window Y position: " + windowPosition.getY() + "\n");
+        Thread.sleep(500);
+        Point newWindowPosition = windowPosition.moveBy(200, 200);
+        driver.manage().window().setPosition(newWindowPosition);
+        System.out.println("*** Window Position for Current Window***\n");
+        System.out.println("Window X position: " + driver.manage().window().getPosition().getX() + "\n");
+        System.out.println("Window Y position: " + driver.manage().window().getPosition().getY() + "\n");
+        Thread.sleep(500);
+    }
+    public void tearDown() 
+   {
+        driver.quit();
+    }
+}
+
+7. Handle multiple windows using driver.getWindowHandles().
+
+@TestInstance (TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder (MethodOrderer.MethodName.class)
+public class Windows
+{
+private WebDriver driver;
+
+public void setupTest()
+{
+WebDriverManager.chromedriver(). setup ();
+driver = new ChromeDriver();
+}
+public void tearDown()
+{
+driver.quit();
+}
+
+public void T01_SwitchToWindows ()
+{
+
+driver. navigate().to("http://www.w3schools.com/tags/tryit.asp?filename=tryhtml_link_target");
+driver. Manage (). window().maximize();
+System.out.println("Current Window Handle: " + driver.getWindowHandle() + "\n");
+
+driver.switchTo().frame("iframeResult");
+WebElement visitLink = driver.findElement(By.linkText("Visit W3Schools.com!"));
+visitLink.click();
+Set<String> windowHandles = driver.getWindowHandles();
+List<String> windowHandlesList = new ArrayList<>(windowHandles); //Set to List Conversion
+System.out.println("Total window number: " + windowHandlesList.size() + "\n");
+driver.switchTo().window(windowHandlesList.get(1));
+System.out.println("Current Window Handle: " + driver.getWindowHandle() + "\n");
+WebElement logo = driver.findElement(By.cssSelector(".fa.fa-logo"));
+Assertions.assertTrue(logo.isDisplayed());
+driver.switchTo().window(windowHandlesList.get(0));
+System.out.println("Current Window Handle: " + driver.getWindowHandle() + "\n");
+WebElement seeResultButton = driver. findElement(By.cssSelector("button[onclick*='submitTryit(1)'"));
+Assertions.assertTrue(seeResultButton.getText(). contains ("Run ❯"));
+}
+}
+
+8. Switch to window using driver.switchTo().window().
+
+String winHandleBefore = driver.getWindowHandle();
+
+for(String winHandle : driver.getWindowHandles())
+{
+    driver.switchTo().window(winHandle);
+}
+
+driver.close();
+
+driver.switchTo().window(winHandleBefore);
+
+9. Switch to frame using driver.switchTo().frame().
+
+public class SwitchToframe 
+{
+public static void main (String[] args) throws NoSuchElementException
+{
+	    WebDriver driver = new FirefoxDriver();
+	    driver.get("http://demo.guru99.com/test/guru99home/");  
+	    driver.manage().window().maximize();
+	    int size = driver.findElements(By.tagName("iframe")).size();
+	
+	    for (int i=0; i<=size; i++)
+                  {
+	    driver.switchTo().frame(i);
+	    int total=driver.findElements(By.xpath("html/body/a/img")).size();
+		System.out.println(total);
+	    driver.switchTo().defaultContent(); //switching back from the iframe
+	 }
+	driver.switchTo().frame(0); //Switching to the frame
+               System.out.println("We are switched to the iframe");
+               driver.findElement(By.xpath("html/body/a/img")).click();
+		
+	    System.out.println("We are done");
+}
+}
+
+
+10. Switch to popup using driver.switchTo.alert().
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+public class DemoWebAlert 
+{
+                WebDriver driver;
+                
+                public DemoWebAlert() 
+    {                            
+                }
+ 
+                
+                public void setUp() 
+                {
+                                driver=new FirefoxDriver();
+                                driver.get("file:///F:/Work/Selenium/Testing-Presentation/DemoWebPopup.htm");
+                                driver. manage (). window (). maximize ();
+                }
+ 
+                public void testWebAlert() throws InterruptedException                                                
+                {                
+                                driver. find Element (By.xpath("//button[contains(text(),'Try it')]")).click();
+                                Thread.sleep(5000);
+ 
+                                Alert alert = driver.switchTo().alert();
+                                alert.accept();
+ 
+                                driver. find Element (By.xpath("//button[contains(text(),'Try it')]")).click();
+                                Thread. Sleep (5000);
+ 
+                                driver. switchTo(). alert (). dismiss ();
+ 
+                                driver. findElement(By.xpath("//button[contains(text(),'Try it')]")).click();
+                                Thread. Sleep (5000);
+ 
+                                System.out.println(driver. switchTo(). alert().getText());
+                                driver. switchTo(). alert (). accept ();
+                }
+ 
+                public void tearDown() {             
+                    driver. Quit ();
+                }
+}
