@@ -1,0 +1,124 @@
+Text Box 
+
+1. How to Type in text box using Selenium Web Driver.
+2. How to get a Text Box value using Selenium Web Driver. 
+3. How to read the placeholder value of a Text Box using getAttribute() method.
+4. Deleting/clear text from the Text Box.
+5. Check if Text Box is enabled/disabled.
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.*;
+
+public class webElements 
+{
+
+        WebDriver driver;
+
+        public void launchBrowser()
+        {
+            System.setProperty("webdriver. chrome. driver","C:\\Users\\Asus\\Downloads\\chromedriver_win32\\chromedriver.exe");
+            driver = new ChromeDriver();
+            driver.manage().deleteAllCookies();
+            driver.get("http://magnus.jalatechnologies.com/");
+        }
+
+        @Test (priority = 1)
+        public void locatorTest() 
+        {
+            driver. findElement (By. xpath("//input[@type='text']")).sendKeys("training@jalaacademy.com");
+            driver. findElement (By.className("form-control")).sendKeys("jobprogram");
+            driver.findElement(By.xpath("//button[@type='button' and @class='btn btn-primary btn-flat']")).click();
+        }
+        @Test (priority = 2)
+        public void jsExTest() 
+        {
+            JavascriptExecutor js = (JavascriptExecutor) driver;
+            js. executeScript("document. getElementById('UserName'). value=‘training@jalaacademy.com'");
+
+        }
+        @Test (priority = 3)
+        public void get_ele_attribute() 
+        {
+            WebElement l = driver.findElement(By.id("UserName"));
+            l.sendKeys("training@jalaacademy.com");
+            String val = l.getAttribute("value");
+
+            System.out.println("Entered text is: " + val);
+
+        }
+        @Test (priority = 4)
+        public void clearText()
+        {
+            driver. findElement (By. xpath("//input[@type='text']")).sendKeys("training@jalaacademy.com");
+            driver.findElement(By.xpath("//input[@type='text']")).clear();
+
+        }
+
+        @Test (priority = 5)
+        public void checkText() 
+        {
+        boolean check = driver. findElement(By.xpath("//input[@type='text']")).isEnabled();
+        Assert.assertEquals(check,true);
+    }
+
+public void closeBrowser() 
+{
+            driver.close();
+        }
+}
+
+
+Radio Button / Check Box
+
+1. Selecting the Radio Button by Label Text / value. 
+2. Find out number of elements in a radio group. 
+3. Find out all radio button values. 
+4. How to get the selected radio button label text? 
+5. Check if Radio Button is selected? 
+6. Check if Radio Button is enabled or disabled?
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+public class radioBox 
+{
+    WebDriver driver;
+
+    public void launchBrowser()
+    {
+        System.setProperty("webdriver. chrome. driver","C:\\Users\\Asus\\Downloads\\chromedriver_win32\\chromedriver.exe");
+        driver = new ChromeDriver();
+        driver.manage().deleteAllCookies();
+        driver.get("http://magnus.jalatechnologies.com/");
+    }
+
+    @Test (priority = 1)
+    public void radioTest() throws InterruptedException 
+    {
+        driver. findElement (By. xpath("//input[@type='text']")). sendKeys("training@jalaacademy.com");
+        driver.findElement(By.id("Password")).sendKeys("jobprogram");
+        Thread.sleep(2000);
+        driver.findElement(By.xpath("//button[@type='button' and @class='btn btn-primary btn-flat']")).click();
+        Thread.sleep(2000);
+        driver.findElement(By.linkText("Employee")).click();
+        driver.findElement(By.linkText("Create")).click();
+        driver.findElement(By.id("rdbMale")).click();
+
+    }
+    public void closeBrowser() 
+   {
+        driver.close();
+    }
+}
