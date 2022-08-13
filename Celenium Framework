@@ -1,0 +1,302 @@
+ebDriverManager.chromedriver().setup();
+	        driver = new ChromeDriver();
+	        driver.get("http://eliasnogueira.com");
+	    }
+	
+    static void quitBrowser() 
+    {
+	        driver.quit();
+	    }
+	}
+
+13. Use loggers.
+
+import java.io.FileInputStream; 
+import java.io.IOException; 
+import java.util.logging.ConsoleHandler; 
+import java.util.logging.FileHandler; 
+import java.util.logging.Handler; 
+import java.util.logging.Level; 
+import java.util.logging.LogManager; 
+import java.util.logging.Logger; 
+public class LoggingExample 
+{ 
+static Logger logger = Logger.getLogger(LoggingExample.class.getName()); 
+public static void main (String[] args) 
+{ 
+try 
+{ 
+LogManager.getLogManager().readConfiguration(new FileInputStream("mylogging.properties")); 
+} 
+catch (SecurityException | IOException e1) 
+{ 
+e1. printStackTrace(); 
+} 
+logger.setLevel(Level.FINE); 
+logger.addHandler(new ConsoleHandler());
+logger.addHandler(new MyHandler()); 
+try 
+{ 
+Handler fileHandler = new FileHandler("/Users/pankaj/tmp/logger.log", 2000, 5); fileHandler.setFormatter(new MyFormatter()); 
+fileHandler.setFilter(new MyFilter()); logger.addHandler(fileHandler); 
+for (int i=0; i<1000; i++)
+{ 
+//logging messages logger.log (Level.INFO, "Msg"+i); 
+} 
+logger.log (Level.CONFIG, "Config data"); 
+} 
+catch (SecurityException | IOException e) 
+{ 
+e.printStackTrace(); 
+} 
+} 
+}
+
+14. Create a config file and pass the constant values from config file.
+
+  [APP]
+	ENVIRONMENT = test
+	DEBUG = True
+	# Only accept True or False
+	
+
+	[DATABASE]
+	USERNAME = xiaoxu
+	PASSWORD = xiaoxu
+	HOST = 127.0.0.1
+	PORT = 5432
+	DB = xiaoxu_database
+
+15. Know how to debug the Scripts.
+
+using System;
+using System.Collections.Generic;
+
+namespace ConsoleApp_FirstApp
+{
+    class Program
+    {
+        static void Main (string [] args)
+        {
+            Console.WriteLine("Welcome to Galaxy News!");
+            IterateThroughList();
+            Console.ReadKey();
+        }
+
+        private static void IterateThroughList()
+        {
+            var theGalaxies = new List<Galaxy>
+        {
+            new Galaxy () {Name="Tadpole", MegaLightYears=400, GalaxyType=new GType('S')},
+            new Galaxy () {Name="Pinwheel", MegaLightYears=25, GalaxyType=new GType('S')},
+            new Galaxy () {Name="Cartwheel", MegaLightYears=500, GalaxyType=new GType('L')},
+            new Galaxy () {Name="Small Magellanic Cloud", MegaLightYears=.2, GalaxyType=new GType('I')},
+            new Galaxy () {Name="Andromeda", MegaLightYears=3, GalaxyType=new GType('S')},
+            new Galaxy () {Name="Maffei 1", MegaLightYears=11, GalaxyType=new GType('E')}
+        };
+
+            foreach (Galaxy theGalaxy in theGalaxies)
+            {
+                Console.WriteLine(theGalaxy.Name + ““ + theGalaxy.MegaLightYears + ",  " + theGalaxy.GalaxyType);
+            }
+
+        }
+    }
+
+    public class Galaxy
+    {
+        public string Name {get; set; }
+
+        public double MegaLightYears {get; set; }
+        public object GalaxyType {get; set; }
+
+    }
+
+    public class GType
+    {
+        public GType(char type)
+        {
+            switch(type)
+            {
+                case 'S':
+                    MyGType = Type.Spiral;
+                    break;
+                case 'E':
+                    MyGType = Type.Elliptical;
+                    break;
+                case 'l':
+                    MyGType = Type.Irregular;
+                    break;
+                case 'L':
+                    MyGType = Type.Lenticular;
+                    break;
+                default:
+                    break;
+            }
+        }
+        public object MyGType {get; set; }
+        private enum Type {Spiral, Elliptical, Irregular, Lenticular}
+    }
+}
+
+16. Run the scripts in all browsers.
+
+import org.openqa.Selenium.WebDriver;
+importorg.openqa.Selenium.htmlunit.HtmlUnitDriver;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+ 
+publicclassvefifyTestTitle 
+{
+ 
+publicvoidverifyFacebookTitle() 
+{
+ 
+WebDriver driver = newHtmlUnitDriver(true);
+ 
+driver.get("http://www.facebook.com");
+ 
+String facebook_Title= driver.getTitle();
+ 
+Assert.assertTrue(facebook_Title.contains("Facebook"));
+ 
+System.out.println(facebook_Title);
+}
+}
+
+17. Parameterize the scripts using excel, Running the same script with multiple set of test data.
+
+Import org.openqa.selenium.By;
+	import org.openqa.selenium.Keys;
+	import org.openqa.selenium.WebDriver;
+	import org.openqa.selenium.WebElement;
+	import org.openqa.selenium.chrome.ChromeDriver;
+	import org.testng.Reporter;
+	import org.testng.annotations.AfterMethod;
+	import org.testng.annotations.BeforeMethod;
+	import org.testng.annotations.DataProvider;
+	import org.testng.annotations.Test;
+	 
+	public class SimpleTest 
+{
+	  	
+	  	WebDriver driver;
+	  	
+	  	@DataProvider(name = "test-data")
+	  	public Object[][] dataProvFunc(){
+	        	return new Object[][]{
+	              	{"Lambda Test"},{"Automation"}
+	        	};
+	  	}
+	  	
+	  	
+	public void setUp() 
+{
+	        	 
+	        	  System.out.println("Start test");
+	        	  System.setProperty("webdriver.chrome.driver", "E:\\chromedriver.exe");
+	        	  driver = new ChromeDriver();
+	        	  String url = "https://www.google.com";
+	        	  driver.get(url);
+	        	  driver.manage().window().maximize();
+	        	 
+	  	  }
+	  	@Test annotation
+	  	@Test(dataProvider ="test-data")
+	  	public void search(String keyWord)
+           {
+	        	WebElement txtBox = driver.findElement(By.xpath("//input[@class='gLFyf gsfi']"));
+	        	  txtBox.sendKeys(keyWord);
+	        	  Reporter.log("Keyword entered is : " +keyWord);
+	        	  txtBox.sendKeys(Keys.ENTER);
+	        	  Reporter.log("Search results are displayed.");
+	  	}
+	  	
+	  	
+	  	public void burnDown()
+          {
+	        	driver.quit();
+	  	}
+	 
+	}
+
+18. Parameterize the scripts using DataProvider.
+
+  import org.openqa.selenium.By;
+	import org.openqa.selenium.Keys;
+	import org.openqa.selenium.WebDriver;
+	import org.openqa.selenium.WebElement;
+	import org.openqa.selenium.chrome.ChromeDriver;
+	import org.testng.Reporter;
+	import org.testng.annotations.AfterMethod;
+	import org.testng.annotations.BeforeMethod;
+	import org.testng.annotations.Test;
+	 
+	public class TestClass 
+  {
+	  WebDriver driver;
+	  public void setUp() 
+    {
+	    System.out.println("Start test");
+	    System.setProperty("webdriver.chrome.driver", "E:\\chromedriver.exe");
+	    driver = new ChromeDriver();
+	    String url = "https://www.google.com";
+	    driver.get(url);
+	    driver.manage().window().maximize();
+	  }
+	  	
+	 @Test(dataProvider ="test-data", dataProviderClass=DPClass.class)
+	 public void search(String keyWord)
+   {
+	  WebElement txtBox = driver.findElement(By.xpath("//input[@class='gLFyf gsfi']"));
+	  txtBox.sendKeys(keyWord);
+	  Reporter.log("Keyword entered is : " +keyWord);
+	  txtBox.sendKeys(Keys.ENTER);
+	   Reporter.log("Search results are displayed.");
+	 }
+	 
+   public void burnDown()
+   {
+	    driver.quit();
+	 }
+	}
+
+20. Configure extent Report.
+
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import com.relevantcodes.extentreports.ExtentReports;
+import com.relevantcodes.extentreports.ExtentTest;
+import com.relevantcodes.extentreports.LogStatus;
+public class ExtentDemo 
+{
+static ExtentTest test;
+static ExtentReports report;
+public static void startTest()
+{
+report = new ExtentReports(System.getProperty("user.dir")+"ExtentReportResults.html");
+test = report.startTest("ExtentDemo");
+}
+public void extentReportsDemo()
+{
+System.setProperty("webdriver.chrome.driver", "D:SubmittalExchange_TFSQAAutomation3rdpartychromechromedriver.exe");
+WebDriver driver = new ChromeDriver();
+driver.get("https://www.google.co.in");
+if(driver.getTitle().equals("Google"))
+{
+test.log(LogStatus.PASS, "Navigated to the specified URL");
+}
+else
+{
+test.log(LogStatus.FAIL, "Test Failed");
+}
+}
+public static void endTest()
+{
+report.endTest(test);
+report.flush();
+}
+}
